@@ -55,7 +55,7 @@ cp .env.example .env
 ### Running
 
 ```bash
-# Start the app from the project root
+# Start the terminal app from the project root
 python -m cli.main
 
 # Start with a new session using farm details
@@ -67,6 +67,20 @@ python -m cli.main --language ur
 # Resume an existing farmer session
 python -m cli.main --farmer-id farmer_001
 ```
+
+### Optional web UI
+
+The project also includes a low-risk web wrapper that reuses the same agent logic without changing the CLI flow.
+
+```bash
+# Install optional web dependencies
+pip install -e ".[api]"
+
+# Run the web app
+python web_app.py
+```
+
+Then open http://localhost:8000 in your browser. The UI keeps the same backend logic and session model, so it is isolated from the working terminal experience.
 
 ### Starting the conversation
 

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kisan Dost</title>
+    <style>
+      :root {
+        --bg: #f5f7ef;
+        --panel: #ffffff;
+        --primary: #1f7a4d;
+        --primary-dark: #135934;
+        --text: #1d2a1d;
+        --muted: #5d6f5f;
+        --border: #dfeadf;
+        --accent: #eaf7ee;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(180deg, var(--bg), #edf5ee);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 40px auto;
+        padding: 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(20, 60, 30, 0.08);
+      }
+      .topbar {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 18px 22px; border-bottom: 1px solid var(--border);
+      }
+      .topbar h1 {
+        margin: 0; font-size: 1.6rem; color: var(--primary-dark);
+      }
+      .badge {
+        background: var(--accent); border: 1px solid var(--border);
+        color: var(--primary-dark); border-radius: 999px; padding: 6px 12px;
+        font-size: 0.8rem; font-weight: bold;
+      }
+      .content {
+        display: grid; grid-template-columns: 320px 1fr; gap: 0;
+      }
+      .sidebar {
+        padding: 20px; border-right: 1px solid var(--border);
+        background: #fafcf9;
+      }
+      .sidebar label {
+        display: block; font-size: 0.82rem; font-weight: bold; margin-bottom: 6px; color: var(--muted);
+      }
+      .sidebar input, .sidebar select {
+        width: 100%; margin-bottom: 14px; padding: 10px 12px; border-radius: 10px;
+        border: 1px solid var(--border); background: white; font-size: 0.96rem;
+      }
+      .chat {
+        display: flex; flex-direction: column; min-height: 620px;
+      }
+      .messages {
+        flex: 1; padding: 20px; overflow-y: auto; background: #fff;
+      }
+      .message {
+        max-width: 85%; margin: 12px 0; padding: 12px 14px; border-radius: 14px;
+        line-height: 1.45; white-space: pre-wrap;
+      }
+      .message.user {
+        margin-left: auto; background: #eaf7ee; color: var(--text);
+      }
+      .message.bot {
+        background: #f4f6f4; border: 1px solid var(--border);
+      }
+      .composer {
+        display: flex; gap: 10px; padding: 16px 18px; border-top: 1px solid var(--border);
+      }
+      .composer input {
+        flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 1rem;
+      }
+      .composer button {
+        border: none; border-radius: 12px; background: var(--primary); color: white; padding: 12px 20px; font-weight: bold; cursor: pointer;
+      }
+      .composer button:hover { background: var(--primary-dark); }
+      @media (max-width: 760px) {
+        .content { grid-template-columns: 1fr; }
+        .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="topbar">
+          <h1>Kisan Dost</h1>
+          <span class="badge">AI Agronomy Assistant</span>
+        </div>
+        <div class="content">
+          <aside class="sidebar">
+            <label>Farmer ID</label>
+            <input id="farmerId" value="web_farmer" />
+
+            <label>District</label>
+            <input id="district" value="Multan" />
+
+            <label>Acres</label>
+            <input id="acres" type="number" value="5" step="0.1" min="0.1" />
+
+            <label>Crop</label>
+            <input id="crop" value="wheat" />
+
+            <label>Soil</label>
+            <select id="soilType">
+              <option value="loam">Loam</option>
+              <option value="clay">Clay</option>
+              <option value="sandy">Sandy</option>
+              <option value="silt">Silt</option>
+              <option value="clay_loam">Clay Loam</option>
+              <option value="sandy_loam">Sandy Loam</option>
+            </select>
+
+            <label>Season</label>
+            <select id="season">
+              <option value="rabi">Rabi</option>
+              <option value="kharif">Kharif</option>
+              <option value="zaid">Zaid</option>
+            </select>
+
+            <label>Water</label>
+            <select id="waterAvailability">
+              <option value="canal">Canal</option>
+              <option value="tubewell">Tubewell</option>
+              <option value="full_irrigation">Full irrigation</option>
+              <option value="limited_irrigation">Limited irrigation</option>
+              <option value="rainfed">Rainfed</option>
+            </select>
+          </aside>
+          <main class="chat">
+            <div id="messages" class="messages">
+              <div class="message bot">Assalam-o-Alaikum! I’m Kisan Dost. Ask about crops, pests, irrigation, or market prices.</div>
+            </div>
+            <div class="composer">
+              <input id="prompt" type="text" placeholder="Ask about your farm..." />
+              <button id="sendBtn">Send</button>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+    <script>
+      const messagesEl = document.getElementById('messages');
+      const promptEl = document.getElementById('prompt');
+      const sendBtn = document.getElementById('sendBtn');
+
+      function addMessage(text, sender) {
+        const el = document.createElement('div');
+        el.className = `message ${sender}`;
+        el.textContent = text;
+        messagesEl.appendChild(el);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      async function sendMessage() {
+        const message = promptEl.value.trim();
+        if (!message) return;
+
+        addMessage(message, 'user');
+        promptEl.value = '';
+        const sendText = 'Thinking...';
+        addMessage(sendText, 'bot');
+
+        try {
+          const payload = {
+            message,
+            farmer_id: document.getElementById('farmerId').value || 'web_farmer',
+            district: document.getElementById('district').value || 'Multan',
+            acres: Number(document.getElementById('acres').value || 5),
+            crop: document.getElementById('crop').value || 'wheat',
+            soil_type: document.getElementById('soilType').value,
+            season: document.getElementById('season').value,
+            water_availability: document.getElementById('waterAvailability').value,
+            language: 'en'
+          };
+
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await response.json();
+          const lastBot = messagesEl.querySelectorAll('.message.bot');
+          const botMessage = lastBot[lastBot.length - 1];
+          if (response.ok && data.response) {
+            botMessage.textContent = data.response;
+          } else {
+            botMessage.textContent = data.detail || 'Something went wrong.';
+          }
+        } catch (error) {
+          const lastBot = messagesEl.querySelectorAll('.message.bot');
+          const botMessage = lastBot[lastBot.length - 1];
+          botMessage.textContent = 'The assistant is unavailable right now. Please check the backend log.';
+        }
+      }
+
+      sendBtn.addEventListener('click', sendMessage);
+      promptEl.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') sendMessage();
+      });
+    </script>
+  </body>
+</html>

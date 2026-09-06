@@ -55,18 +55,55 @@ cp .env.example .env
 ### Running
 
 ```bash
-# Interactive mode (creates new farmer session)
-python -m kisan_dost.cli.main
+# Start the app from the project root
+python -m cli.main
 
-# With existing farmer ID
-python -m kisan_dost.cli.main --farmer-id farmer_001
+# Start with a new session using farm details
+python -m cli.main --district Multan --acres 5 --crop wheat
 
-# With language
-python -m kisan_dost.cli.main --language ur
+# Start with a specific language
+python -m cli.main --language ur
 
-# Quick demo with parameters
-python -m kisan_dost.cli.main --district faisalabad --acres 5 --crop wheat
+# Resume an existing farmer session
+python -m cli.main --farmer-id farmer_001
 ```
+
+### Starting the conversation
+
+Once the app starts, the CLI welcomes you and waits for input:
+
+```text
+Assalam-o-Alaikum Mehmood! Main Kisan Dost. Aaj aapki kya madad karoon?
+
+Your question: : what should I plant this Rabi season on 5 acres in Multan
+```
+
+You can type a normal farm question directly, or use slash commands at any time:
+
+```text
+/help
+/lang en
+/lang ur
+/profile
+/context
+/history
+/reset
+/session new
+/session list
+/quit
+```
+
+Common workflow:
+
+1. Start the app with `python -m cli.main`
+2. Type `/help` to see commands
+3. Optionally switch language with `/lang ur` or `/lang roman_ur`
+4. Run questions like:
+   - "What should I plant this Rabi season on 5 acres in Multan?"
+   - "My cotton leaves are curling with tiny white insects"
+   - "How much Urea and DAP for 10 acres of wheat?"
+   - "What's the wheat price in Faisalabad mandi?"
+5. Use `/session new` or pass `--district --acres --crop` when starting for a faster first run
 
 ## 💬 Example Conversation
 

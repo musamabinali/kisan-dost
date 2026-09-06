@@ -76,11 +76,25 @@ The project also includes a low-risk web wrapper that reuses the same agent logi
 # Install optional web dependencies
 pip install -e ".[api]"
 
-# Run the web app
+# Run the web app locally
 python web_app.py
 ```
 
 Then open http://localhost:8000 in your browser. The UI keeps the same backend logic and session model, so it is isolated from the working terminal experience.
+
+### Production-safe deployment with Gunicorn
+
+For a no-risk production wrapper, run the FastAPI app behind Gunicorn without modifying the business logic:
+
+```bash
+# install gunicorn if needed
+pip install gunicorn
+
+# start production worker process
+gunicorn -k uvicorn.workers.UvicornWorker web_app:app --bind 0.0.0.0:8000 --workers 2
+```
+
+This keeps the same FastAPI app and agent logic, while using a standard WSGI/ASGI process manager for deployment.
 
 ### Starting the conversation
 

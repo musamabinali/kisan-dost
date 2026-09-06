@@ -108,6 +108,22 @@ async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/api/history")
+async def get_history(farmer_id: str = "web_farmer") -> dict[str, Any]:
+    existing = session_manager.get_session_by_farmer(farmer_id)
+    if not existing:
+        return {"history": []}
+
+    session_id = existing["session_id"]
+    messages = session_manager.get_messages(session_id, limit=12)
+    history = [
+        {"role": item["role"], "content": item["content"]}
+        for item in messages
+        if item.get("content")
+    ]
+    return {"history": history}
+
+
 @app.post("/api/chat")
 async def chat(request: ChatRequest) -> dict[str, Any]:
     if not request.message.strip():
@@ -153,7 +169,13 @@ async def chat(request: ChatRequest) -> dict[str, Any]:
         agent_name="triage_agent",
     )
 
-    return {"response": response_text, "session_id": session_id}
+    recent_history = session_manager.get_messages(session_id, limit=12)
+    history = [
+        {"role": item["role"], "content": item["content"]}
+        for item in recent_history
+        if item.get("content")
+    ]
+    return {"response": response_text, "session_id": session_id, "history": history}
 
 
 if __name__ == "__main__":

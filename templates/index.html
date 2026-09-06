@@ -6,88 +6,411 @@
     <title>Kisan Dost</title>
     <style>
       :root {
-        --bg: #f5f7ef;
-        --panel: #ffffff;
-        --primary: #1f7a4d;
-        --primary-dark: #135934;
-        --text: #1d2a1d;
-        --muted: #5d6f5f;
-        --border: #dfeadf;
-        --accent: #eaf7ee;
+        --bg: #f3f7f0;
+        --bg-strong: #eaf4eb;
+        --panel: rgba(255, 255, 255, 0.9);
+        --panel-strong: #ffffff;
+        --primary: #1d7a4e;
+        --primary-dark: #124f36;
+        --primary-soft: #ebf8f0;
+        --text: #173126;
+        --muted: #587163;
+        --border: rgba(24, 74, 47, 0.12);
+        --shadow: 0 22px 65px rgba(18, 55, 31, 0.12);
+        --sidebar-bg: rgba(246, 250, 247, 0.96);
+        --history-bg: rgba(244, 247, 244, 0.95);
+        --message-bot: #f1f5f2;
+        --message-user: linear-gradient(135deg, #dff5e7, #cfeedd);
+        --chip: #ecf7f0;
       }
-      * { box-sizing: border-box; }
-      body {
+
+      body.dark {
+        --bg: #0d1711;
+        --bg-strong: #122018;
+        --panel: rgba(18, 35, 27, 0.9);
+        --panel-strong: #152a20;
+        --primary: #67d38f;
+        --primary-dark: #a7f0c2;
+        --primary-soft: rgba(103, 211, 143, 0.12);
+        --text: #eefaf2;
+        --muted: #b1cab8;
+        --border: rgba(190, 227, 204, 0.12);
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.32);
+        --sidebar-bg: rgba(15, 27, 21, 0.96);
+        --history-bg: rgba(18, 31, 24, 0.9);
+        --message-bot: #183126;
+        --message-user: linear-gradient(135deg, #1d4c3a, #163d2f);
+        --chip: #183629;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(180deg, var(--bg), #edf5ee);
+        min-height: 100%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top left, var(--bg-strong), var(--bg) 55%);
         color: var(--text);
+        transition: background 0.25s ease, color 0.25s ease;
       }
+
+      body {
+        padding: 32px 22px;
+      }
+
       .wrap {
-        max-width: 980px;
-        margin: 40px auto;
-        padding: 24px;
+        max-width: 1440px;
+        margin: 0 auto;
       }
+
       .card {
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 18px;
-        box-shadow: 0 10px 25px rgba(20, 60, 30, 0.08);
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(8px);
+        overflow: hidden;
       }
+
       .topbar {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 18px 22px; border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 26px 32px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(250, 252, 250, 0.8), rgba(244, 249, 244, 0.7));
       }
-      .topbar h1 {
-        margin: 0; font-size: 1.6rem; color: var(--primary-dark);
+
+      body.dark .topbar {
+        background: linear-gradient(180deg, rgba(18, 35, 27, 0.96), rgba(11, 19, 15, 0.88));
       }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--primary), #7ec58e);
+        color: white;
+        font-weight: 800;
+        box-shadow: 0 12px 26px rgba(29, 122, 78, 0.28);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        letter-spacing: -0.04em;
+        color: var(--primary-dark);
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
       .badge {
-        background: var(--accent); border: 1px solid var(--border);
-        color: var(--primary-dark); border-radius: 999px; padding: 6px 12px;
-        font-size: 0.8rem; font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary-dark);
+        border: 1px solid var(--border);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
+
+      .theme-toggle {
+        border: 1px solid var(--border);
+        background: var(--panel-strong);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: translateY(-1px);
+      }
+
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        padding: 28px 32px 14px;
+        flex-wrap: wrap;
+      }
+
+      .hero-copy {
+        flex: 1 1 420px;
+      }
+
+      .hero-copy h2 {
+        margin: 0 0 8px;
+        font-size: clamp(1.3rem, 2vw, 1.8rem);
+        color: var(--primary-dark);
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .quick-tags {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .quick-tags span {
+        display: inline-flex;
+        align-items: center;
+        background: var(--chip);
+        border: 1px solid var(--border);
+        color: var(--primary-dark);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
       .content {
-        display: grid; grid-template-columns: 320px 1fr; gap: 0;
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr) 270px;
       }
+
+      .sidebar,
+      .history-panel {
+        background: var(--sidebar-bg);
+        padding: 28px 22px;
+      }
+
       .sidebar {
-        padding: 20px; border-right: 1px solid var(--border);
-        background: #fafcf9;
+        border-right: 1px solid var(--border);
       }
-      .sidebar label {
-        display: block; font-size: 0.82rem; font-weight: bold; margin-bottom: 6px; color: var(--muted);
+
+      .history-panel {
+        border-left: 1px solid var(--border);
+        background: var(--history-bg);
       }
-      .sidebar input, .sidebar select {
-        width: 100%; margin-bottom: 14px; padding: 10px 12px; border-radius: 10px;
-        border: 1px solid var(--border); background: white; font-size: 0.96rem;
+
+      .panel-title {
+        margin: 0 0 14px;
+        font-size: 0.76rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
       }
+
+      .field-group {
+        margin-bottom: 18px;
+      }
+
+      .field-group label {
+        display: block;
+        margin: 0 0 7px;
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .field-group input,
+      .field-group select {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--panel-strong);
+        color: var(--text);
+        padding: 11px 12px;
+        font-size: 0.96rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .field-group input:focus,
+      .field-group select:focus {
+        border-color: rgba(29, 122, 78, 0.5);
+        box-shadow: 0 0 0 4px rgba(29, 122, 78, 0.08);
+      }
+
       .chat {
-        display: flex; flex-direction: column; min-height: 620px;
+        display: flex;
+        flex-direction: column;
+        min-height: 660px;
+        max-height: 760px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(233, 240, 234, 0.2));
       }
+
       .messages {
-        flex: 1; padding: 20px; overflow-y: auto; background: #fff;
+        flex: 1;
+        padding: 28px 24px 14px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
       }
+
       .message {
-        max-width: 85%; margin: 12px 0; padding: 12px 14px; border-radius: 14px;
-        line-height: 1.45; white-space: pre-wrap;
+        width: fit-content;
+        max-width: min(82%, 780px);
+        padding: 16px 18px;
+        border-radius: 20px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        box-shadow: 0 12px 24px rgba(16, 35, 25, 0.05);
       }
-      .message.user {
-        margin-left: auto; background: #eaf7ee; color: var(--text);
-      }
+
       .message.bot {
-        background: #f4f6f4; border: 1px solid var(--border);
+        background: var(--message-bot);
+        border: 1px solid var(--border);
+        color: var(--text);
       }
+
+      .message.user {
+        margin-left: auto;
+        background: var(--message-user);
+        color: var(--text);
+        border: 1px solid rgba(29, 122, 78, 0.08);
+      }
+
       .composer {
-        display: flex; gap: 10px; padding: 16px 18px; border-top: 1px solid var(--border);
+        display: flex;
+        gap: 14px;
+        padding: 18px 22px 22px;
+        border-top: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.12);
       }
+
       .composer input {
-        flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 1rem;
+        flex: 1;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--panel-strong);
+        color: var(--text);
+        padding: 15px 16px;
+        font-size: 1rem;
+        outline: none;
       }
+
+      .composer input:focus {
+        border-color: rgba(29, 122, 78, 0.45);
+        box-shadow: 0 0 0 4px rgba(29, 122, 78, 0.08);
+      }
+
       .composer button {
-        border: none; border-radius: 12px; background: var(--primary); color: white; padding: 12px 20px; font-weight: bold; cursor: pointer;
+        border: none;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--primary), #3fb878);
+        color: white;
+        padding: 15px 24px;
+        font-size: 0.98rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 12px 22px rgba(29, 122, 78, 0.25);
       }
-      .composer button:hover { background: var(--primary-dark); }
-      @media (max-width: 760px) {
-        .content { grid-template-columns: 1fr; }
-        .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+
+      .composer button:hover {
+        filter: brightness(1.03);
+      }
+
+      .history-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .history-item {
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 14px;
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 0.82rem;
+      }
+
+      .history-item strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--primary-dark);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 980px) {
+        .content {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar,
+        .history-panel {
+          border: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .chat {
+          min-height: 500px;
+        }
+      }
+
+      @media (max-width: 540px) {
+        body {
+          padding: 12px 10px;
+        }
+
+        .topbar,
+        .hero {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+        }
+
+        .topbar-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .composer {
+          flex-direction: column;
+        }
+
+        .composer button {
+          width: 100%;
+        }
+
+        .message {
+          max-width: 100%;
+        }
       }
     </style>
   </head>
@@ -95,49 +418,84 @@
     <div class="wrap">
       <div class="card">
         <div class="topbar">
-          <h1>Kisan Dost</h1>
-          <span class="badge">AI Agronomy Assistant</span>
+          <div class="brand">
+            <div class="brand-mark">K</div>
+            <h1>Kisan Dost</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="badge">AI Agronomy Assistant</span>
+            <button id="themeToggle" class="theme-toggle" type="button">Dark mode</button>
+          </div>
         </div>
+
+        <div class="hero">
+          <div class="hero-copy">
+            <h2>Smart farm guidance for Pakistani growers</h2>
+            <p>Ask about crop choices, pests, fertilizer plans, irrigation timing, and market decisions.</p>
+          </div>
+          <div class="quick-tags">
+            <span>Wheat</span>
+            <span>Fertilizer</span>
+            <span>Weather</span>
+            <span>Market</span>
+          </div>
+        </div>
+
         <div class="content">
           <aside class="sidebar">
-            <label>Farmer ID</label>
-            <input id="farmerId" value="web_farmer" />
+            <div class="field-group">
+              <label for="farmerId">Farmer ID</label>
+              <input id="farmerId" value="web_farmer" />
+            </div>
 
-            <label>District</label>
-            <input id="district" value="Multan" />
+            <div class="field-group">
+              <label for="district">District</label>
+              <input id="district" value="Multan" />
+            </div>
 
-            <label>Acres</label>
-            <input id="acres" type="number" value="5" step="0.1" min="0.1" />
+            <div class="field-group">
+              <label for="acres">Acres</label>
+              <input id="acres" type="number" value="5" step="0.1" min="0.1" />
+            </div>
 
-            <label>Crop</label>
-            <input id="crop" value="wheat" />
+            <div class="field-group">
+              <label for="crop">Crop</label>
+              <input id="crop" value="wheat" />
+            </div>
 
-            <label>Soil</label>
-            <select id="soilType">
-              <option value="loam">Loam</option>
-              <option value="clay">Clay</option>
-              <option value="sandy">Sandy</option>
-              <option value="silt">Silt</option>
-              <option value="clay_loam">Clay Loam</option>
-              <option value="sandy_loam">Sandy Loam</option>
-            </select>
+            <div class="field-group">
+              <label for="soilType">Soil</label>
+              <select id="soilType">
+                <option value="loam">Loam</option>
+                <option value="clay">Clay</option>
+                <option value="sandy">Sandy</option>
+                <option value="silt">Silt</option>
+                <option value="clay_loam">Clay Loam</option>
+                <option value="sandy_loam">Sandy Loam</option>
+              </select>
+            </div>
 
-            <label>Season</label>
-            <select id="season">
-              <option value="rabi">Rabi</option>
-              <option value="kharif">Kharif</option>
-              <option value="zaid">Zaid</option>
-            </select>
+            <div class="field-group">
+              <label for="season">Season</label>
+              <select id="season">
+                <option value="rabi">Rabi</option>
+                <option value="kharif">Kharif</option>
+                <option value="zaid">Zaid</option>
+              </select>
+            </div>
 
-            <label>Water</label>
-            <select id="waterAvailability">
-              <option value="canal">Canal</option>
-              <option value="tubewell">Tubewell</option>
-              <option value="full_irrigation">Full irrigation</option>
-              <option value="limited_irrigation">Limited irrigation</option>
-              <option value="rainfed">Rainfed</option>
-            </select>
+            <div class="field-group">
+              <label for="waterAvailability">Water</label>
+              <select id="waterAvailability">
+                <option value="canal">Canal</option>
+                <option value="tubewell">Tubewell</option>
+                <option value="full_irrigation">Full irrigation</option>
+                <option value="limited_irrigation">Limited irrigation</option>
+                <option value="rainfed">Rainfed</option>
+              </select>
+            </div>
           </aside>
+
           <main class="chat">
             <div id="messages" class="messages">
               <div class="message bot">Assalam-o-Alaikum! I’m Kisan Dost. Ask about crops, pests, irrigation, or market prices.</div>
@@ -147,6 +505,11 @@
               <button id="sendBtn">Send</button>
             </div>
           </main>
+
+          <aside class="history-panel">
+            <h3 class="panel-title">Recent chats</h3>
+            <ul id="historyList" class="history-list"></ul>
+          </aside>
         </div>
       </div>
     </div>
@@ -154,6 +517,15 @@
       const messagesEl = document.getElementById('messages');
       const promptEl = document.getElementById('prompt');
       const sendBtn = document.getElementById('sendBtn');
+      const historyListEl = document.getElementById('historyList');
+      const themeToggle = document.getElementById('themeToggle');
+
+      function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.classList.toggle('dark', isDark);
+        themeToggle.textContent = isDark ? 'Light mode' : 'Dark mode';
+        localStorage.setItem('kisan-dost-theme', theme);
+      }
 
       function addMessage(text, sender) {
         const el = document.createElement('div');
@@ -163,14 +535,44 @@
         messagesEl.scrollTop = messagesEl.scrollHeight;
       }
 
+      function renderHistory(history) {
+        historyListEl.innerHTML = '';
+        if (!history || history.length === 0) {
+          const item = document.createElement('li');
+          item.className = 'history-item';
+          item.innerHTML = '<strong>No chats yet</strong>Start by asking a crop or field question.';
+          historyListEl.appendChild(item);
+          return;
+        }
+
+        history.filter(item => item.content && item.role === 'user')
+          .slice(0, 6)
+          .forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            li.innerHTML = `<strong>Question</strong>${item.content}`;
+            historyListEl.appendChild(li);
+          });
+      }
+
+      async function refreshHistory() {
+        const farmerId = document.getElementById('farmerId').value || 'web_farmer';
+        try {
+          const response = await fetch(`/api/history?farmer_id=${encodeURIComponent(farmerId)}`);
+          const data = await response.json();
+          renderHistory(data.history || []);
+        } catch (error) {
+          renderHistory([]);
+        }
+      }
+
       async function sendMessage() {
         const message = promptEl.value.trim();
         if (!message) return;
 
         addMessage(message, 'user');
         promptEl.value = '';
-        const sendText = 'Thinking...';
-        addMessage(sendText, 'bot');
+        addMessage('Thinking...', 'bot');
 
         try {
           const payload = {
@@ -196,6 +598,7 @@
           const botMessage = lastBot[lastBot.length - 1];
           if (response.ok && data.response) {
             botMessage.textContent = data.response;
+            renderHistory(data.history || []);
           } else {
             botMessage.textContent = data.detail || 'Something went wrong.';
           }
@@ -210,6 +613,14 @@
       promptEl.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') sendMessage();
       });
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+
+      const savedTheme = localStorage.getItem('kisan-dost-theme') || 'light';
+      applyTheme(savedTheme);
+      refreshHistory();
     </script>
   </body>
 </html>

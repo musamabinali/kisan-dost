@@ -67,6 +67,20 @@ class TestCropModels:
         )
         assert crop.expected_revenue_per_acre_pkr == 120000.0  # 1200/40 * 4000
     
+    def test_crop_recommendation_accepts_365_day_crop(self):
+        crop = CropRecommendation(
+            crop_name="lucerne",
+            category=CropCategory.FODDER,
+            expected_yield_kg_per_acre=12000,
+            expected_price_pkr_per_40kg=1500,
+            water_requirement_mm=800,
+            growing_days=365,
+            fertilizer_npk_kg_per_acre=(50, 30, 30),
+            profit_per_acre_pkr=130000,
+            suitability_score=0.82
+        )
+        assert crop.growing_days == 365
+
     def test_crop_plan(self):
         crop_rec = CropRecommendation(
             crop_name="wheat",

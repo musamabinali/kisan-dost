@@ -18,7 +18,7 @@ class CropRecommendation(BaseModel):
     expected_yield_kg_per_acre: float = Field(..., ge=0)
     expected_price_pkr_per_40kg: float = Field(..., ge=0)
     water_requirement_mm: float = Field(..., ge=0)
-    growing_days: int = Field(..., ge=30, le=300)
+    growing_days: int = Field(..., ge=30, le=365)
     fertilizer_npk_kg_per_acre: tuple[float, float, float]  # N, P, K
     profit_per_acre_pkr: float
     suitability_score: float = Field(..., ge=0, le=1)
